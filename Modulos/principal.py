@@ -51,8 +51,8 @@ def selecionando_colunas_desejadas(caminhos_completos):
         try:
             df = pd.read_excel(caminho, header=1)
             df_selecionado = df.iloc[:, :7]
-            print(f"Arquivo: {os.path.basename(caminho)}")
-            print(df_selecionado.head())  # Exibe as primeiras linhas do DataFrame selecionado
+            #print(f"Arquivo: {os.path.basename(caminho)}")
+            #print(df_selecionado.head())  # Exibe as primeiras linhas do DataFrame selecionado
 
             # Puxa o valor Java e o utiliza na função de ordenação de colunas
             valor_java = puxar_valor_java(caminho, celula='C1')
