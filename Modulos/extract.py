@@ -1,30 +1,25 @@
-import pandas as pd
-import openpyxl 
-import os as os
-
-
-def listar_nomes_arquivos():
-    # Lista o nome dos arquivos planilha
-    pasta = 'C:\\Users\\jfgfilho\\OneDrive - rd.com.br\\Área de Trabalho\\extracao_dados\\planilhas\\LISTAS - (01) JANEIRO'
-    arquivo = os.listdir(pasta)
-    workbooks = [arquivo for arquivo in arquivo if arquivo.endswith(('.xlsx', '.xls'))]
-    nomes_sheets = []
-    for workbooks in workbooks:
-        nomes_sheets.append(workbooks)
-        print(workbooks)
+import os
 
 import os
 
-def listar_nomes_pastas():
-    # Lista o nome das pastas
-    pasta = 'C:\\Users\\jfgfilho\\OneDrive - rd.com.br\\Área de Trabalho\\extracao_dados\\planilhas'
-    arquivos_e_pastas = os.listdir(pasta)  # Lista todos os itens da pasta
-    pastas = [item for item in arquivos_e_pastas if os.path.isdir(os.path.join(pasta, item))]
-    nome_pastas = []
-    for pasta in pastas:
-        nome_pastas.append(pasta)
-    print(pastas)
+def listar_arquivos_em_pastas(pasta_raiz):
+    """Lista recursivamente os arquivos em uma pasta e suas subpastas,
+    imprimindo o nome da pasta e os arquivos Excel encontrados.
 
-listar_nomes_pastas()
-listar_nomes_arquivos()
+    Args:
+        pasta_raiz (str): Caminho da pasta raiz.
+    """
 
+    for raiz, diretorios, arquivos in os.walk(pasta_raiz):
+        nome_pasta = os.path.basename(raiz)
+        if nome_pasta.startswith("LISTAS"):
+            print(f"Pasta: {nome_pasta}")
+            arquivos_excel = []
+            for arquivo in arquivos:
+                if arquivo.endswith(('.xlsx', '.xls')):
+                    arquivos_excel.append(arquivo)
+                    print(f"  Arquivo: {arquivo}")
+
+# Exemplo de uso:
+pasta_raiz = 'C:\\Users\\jfgfilho\\OneDrive - rd.com.br\\Área de Trabalho\\extracao_dados\\planilhas'
+listar_arquivos_em_pastas(pasta_raiz)
