@@ -57,11 +57,11 @@ def selecionando_colunas_desejadas(caminhos_completos):
             # Puxa o valor Java e o utiliza na função de ordenação de colunas
             valor_java = puxar_valor_java(caminho, celula='C1')
             if valor_java:
-                ordenando_as_colunas(df_selecionado, valor_java)
+                ordenando_as_colunas(df_selecionado, valor_java, caminho)
         except Exception as e:
             print(f"Erro ao processar o arquivo {caminho}: {e}")
 
-def ordenando_as_colunas(df_selecionado, valor_java):
+def ordenando_as_colunas(df_selecionado, valor_java, caminho):
     # Manipula o DataFrame conforme o solicitado
     df_selecionado = df_selecionado.drop('GRUPO', axis=1, errors='ignore')
     df_selecionado = df_selecionado.rename(columns={'NF': 'NF ENTRADA'})
@@ -71,20 +71,45 @@ def ordenando_as_colunas(df_selecionado, valor_java):
     df_selecionado.insert(3, 'UF', ' ')
     
     # Exibe o DataFrame resultante
-    print("DataFrame após ordenação das colunas:")
-    print(df_selecionado.head())  # Exibe as primeiras linhas do DataFrame
+    #print("DataFrame após ordenação das colunas:")
+    #print(df_selecionado.head())  # Exibe as primeiras linhas do DataFrame
+    # Salva o DataFrame modificado em um novo arquivo
+    novo_caminho = caminho.replace('.xlsx', '_modificado.xlsx')  # Define o caminho do novo arquivo
+    df_selecionado.to_excel(novo_caminho, index=False)
+    #print(f"Arquivo salvo com sucesso em: {novo_caminho}")
 
-    # Se desejar salvar o DataFrame modificado de volta no arquivo Excel:
-    # df_selecionado.to_excel(caminho, index=False)
-
-# Exemplo de uso
+# Puxa o valor Java de cada arquivo e armazena na lista javas
 arquivos = listar_arquivos_em_pastas(pasta_raiz)
 selecionando_colunas_desejadas(arquivos)
 
-# Puxa o valor Java de cada arquivo e armazena na lista javas
 for arquivo in arquivos:
     java = puxar_valor_java(arquivo, celula='C1')
     if java:
         javas.append(java)
 
 print("Valores Java extraídos:", javas)
+
+def concatenar_arquivos_excel(diretorio_entrada, caminho_saida):
+    # Cria a pasta de saída, se não existir
+    caminho_saida = os.path.join(diretorio_entrada, nome_pasta_saida)
+    os.makedirs(caminho_saida, exist_ok=True)
+
+    # Cria uma lista para armazenar todos os DataFrames
+    lista_dfs = []
+
+    # Percorre todos os arquivos no diretório de entrada
+    for nome_arquivo in os.listdir(diretorio_entrada):
+        if nome_arquivo.endswith('.xlsx'):
+            caminho_arquivo = os.path.join(diretorio_entrada, nome_arquivo)
+            # Lê o arquivo Excel e adiciona o DataFrame à lista
+            df = pd.read_excel(caminho_arquivo)
+            lista_dfs.append(df)
+
+    # Salva o DataFrame concatenado na nova pasta
+    nome_arquivo_saida = "arquivo_concatenado.xlsx"  # Você pode personalizar o nome
+    caminho_completo = os.path.join(caminho_saida, nome_arquivo_saida)
+    df_concatenado.to_excel(caminho_completo, index=False)
+    print(f"Arquivo concatenado salvo com sucesso em: {caminho_completo}")
+
+# uso
+#concatenar_arquivos_excel(pasta_raiz, 'C:\\Users\\jfgfilho\\OneDrive - rd.com.br\\Área de Trabalho\\extracao_dados')
